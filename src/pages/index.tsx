@@ -7,6 +7,9 @@ import Cliente from "../core/Cliente";
 
 export default function Home() {
 
+  const [cliente, setCliente] = useState<Cliente>(Cliente.vazio)
+  const [visivel, setVisivel] = useState<'tabela' | 'form'>('tabela')
+
   const clientes = [
     new Cliente('Bia',34,'1'),
     new Cliente('Carlos',45,'2'),
@@ -15,18 +18,23 @@ export default function Home() {
   ]
 
   function clienteSelecionado(cliente: Cliente){
-    console.log(cliente.nome)
+    setCliente(cliente)
+    setVisivel('form')
   }
 
   function clienteExcluido(cliente: Cliente){
     console.log(`Excluir... ${cliente.nome}`)
   }
 
+  function novoCliente() {
+    setVisivel('form')
+    setCliente(Cliente.vazio)
+  }
+  
   function salvarCliente(cliente:Cliente) {
+    setVisivel('tabela')
     console.log(cliente)
   }
-
-  const [visivel, setVisivel] = useState<'tabela' | 'form'>('tabela')
 
   return (
     <div className={`
@@ -39,7 +47,7 @@ export default function Home() {
           <>
             <div className="flex justify-end">
               <Botao className="mb-4"
-              onClick={() => setVisivel('form')} >
+              onClick={novoCliente} >
                 Novo Cliente
               </Botao>
             </div>
@@ -50,7 +58,7 @@ export default function Home() {
           </>
         ) : (
           <Formulario 
-            cliente={clientes[0]}
+            cliente={cliente}
             clienteMudou={salvarCliente}
             cancelado={() => setVisivel('tabela')}
           />
